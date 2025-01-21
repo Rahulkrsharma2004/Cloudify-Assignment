@@ -1,22 +1,36 @@
-import React, { useState } from 'react';
-import Dropdown from './Dropdown';
-import MultiselectDropdown from './MultiselectDropdown';
+import React, { useState } from "react";
+import Dropdown from "./Dropdown";
+import MultiselectDropdown from "./MultiselectDropdown";
 
 const Table = () => {
-  const [rows, setRows] = useState([{ id: 1, label1: '', label2: [] }]);
-  const [label1Options, setLabel1Options] = useState(['Option 1', 'Option 2', 'Option 3', 'Option 4']);
-  const [label2Options, setLabel2Options] = useState(['Option A', 'Option B', 'Option C']);
+  const [rows, setRows] = useState([{ id: 1, label1: "", label2: [] }]);
+  const [label1Options, setLabel1Options] = useState([
+    "Option 1",
+    "Option 2",
+    "Option 3",
+    "Option 4",
+  ]);
+  const [label2Options, setLabel2Options] = useState([
+    "Option A",
+    "Option B",
+    "Option C",
+  ]);
 
   const handleAddRow = () => {
-    setRows([...rows, { id: rows.length + 1, label1: '', label2: [] }]);
+    setRows([...rows, { id: rows.length + 1, label1: "", label2: [] }]);
   };
 
   const updateRow = (id, field, value) => {
-    setRows(rows.map(row => (row.id === id ? { ...row, [field]: value } : row)));
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
   };
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold text-center mb-4">Dynamic Table</h1>
       <table className="w-full border-collapse border border-gray-300 mb-4">
         <thead>
           <tr className="bg-gray-200">
@@ -25,22 +39,24 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {rows.map(row => (
+          {rows.map((row) => (
             <tr key={row.id}>
               <td className="border border-gray-300 px-4 py-2">
                 <Dropdown
                   options={label1Options}
                   selected={row.label1}
-                  onChange={value => updateRow(row.id, 'label1', value)}
-                  disabledOptions={rows.map(r => r.label1)}
+                  onChange={(value) => updateRow(row.id, "label1", value)}
+                  disabledOptions={rows.map((r) => r.label1)}
                 />
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 <MultiselectDropdown
                   options={label2Options}
                   selected={row.label2}
-                  onChange={value => updateRow(row.id, 'label2', value)}
-                  onAddOption={option => setLabel2Options([...label2Options, option])}
+                  onChange={(value) => updateRow(row.id, "label2", value)}
+                  onAddOption={(option) =>
+                    setLabel2Options([...label2Options, option])
+                  }
                 />
               </td>
             </tr>
