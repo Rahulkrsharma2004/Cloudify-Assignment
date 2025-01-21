@@ -10,8 +10,6 @@ const Table = () => {
     "Option 3",
     "Option 4",
     "Option 5",
-    "Option 6",
-    "Option 7",
   ]);
   const [label2Options, setLabel2Options] = useState([
     "Option A",
@@ -19,7 +17,6 @@ const Table = () => {
     "Option C",
     "Option D",
     "Option E",
-    "Option F",
   ]);
 
   const handleAddRow = () => {
@@ -39,14 +36,14 @@ const Table = () => {
       <table className="w-full border-collapse border border-gray-300 mb-4">
         <thead>
           <tr className="bg-gray-200">
-            <th className="border border-gray-300 px-4 py-2">Label 1</th>
-            <th className="border border-gray-300 px-4 py-2">Label 2</th>
+            <th className="border border-black px-4 py-2">Label 1</th>
+            <th className="border border-black px-4 py-2">Label 2</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
             <tr key={row.id}>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-green-500 px-4 py-2">
                 <Dropdown
                   options={label1Options}
                   selected={row.label1}
@@ -54,7 +51,7 @@ const Table = () => {
                   disabledOptions={rows.map((r) => r.label1)}
                 />
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-green-500 px-4 py-2">
                 <MultiselectDropdown
                   options={label2Options}
                   selected={row.label2}

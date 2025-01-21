@@ -11,42 +11,42 @@ const Dropdown = ({ options, selected, onChange, disabledOptions }) => {
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      border: "1px solid #d1d5db", // Light gray border
+      border: "1px solid #d1d5db",
       borderRadius: "5px",
       padding: "2px",
     }),
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isDisabled
-        ? "#e5e7eb" // Light gray for disabled options
+        ? "#e5e7eb"
         : state.isSelected
-        ? "#2563eb" // Blue for selected options
+        ? "#2563eb"
         : state.isFocused
-        ? "#bfdbfe" // Light blue for hovered options
-        : "#ffffff", // Default white
-      color: state.isDisabled ? "#9ca3af" : "#000000", // Gray for disabled text
+        ? "#bfdbfe"
+        : "#ffffff",
+      color: state.isDisabled ? "#9ca3af" : "#000000",
       cursor: state.isDisabled ? "not-allowed" : "pointer",
     }),
     multiValue: (provided) => ({
       ...provided,
-      backgroundColor: "#f3f4f6", // Light gray background
+      backgroundColor: "#f3f4f6",
     }),
     multiValueLabel: (provided) => ({
       ...provided,
-      color: "#111827", // Dark text
+      color: "#111827",
     }),
     multiValueRemove: (provided) => ({
       ...provided,
-      color: "#dc2626", // Red cross
+      color: "#dc2626",
       ":hover": {
-        backgroundColor: "#fee2e2", // Light red hover
+        backgroundColor: "#fee2e2",
         color: "#b91c1c",
       },
     }),
   };
 
   const handleChange = (selectedOption) => {
-    onChange(selectedOption ? selectedOption.value : ""); // Handle value change
+    onChange(selectedOption ? selectedOption.value : "");
   };
 
   return (
