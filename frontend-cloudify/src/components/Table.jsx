@@ -9,11 +9,17 @@ const Table = () => {
     "Option 2",
     "Option 3",
     "Option 4",
+    "Option 5",
+    "Option 6",
+    "Option 7",
   ]);
   const [label2Options, setLabel2Options] = useState([
     "Option A",
     "Option B",
     "Option C",
+    "Option D",
+    "Option E",
+    "Option F",
   ]);
 
   const handleAddRow = () => {
@@ -30,7 +36,6 @@ const Table = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center mb-4">Dynamic Table</h1>
       <table className="w-full border-collapse border border-gray-300 mb-4">
         <thead>
           <tr className="bg-gray-200">
@@ -63,12 +68,14 @@ const Table = () => {
           ))}
         </tbody>
       </table>
-      <button
-        onClick={handleAddRow}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Add New Row
-      </button>
+      <div className="mt-8 flex justify-center">
+    <button
+      onClick={handleAddRow}
+      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    >
+      Add New Row
+    </button>
+  </div>
     </div>
   );
 };
