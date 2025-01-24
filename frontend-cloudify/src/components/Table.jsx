@@ -1,26 +1,26 @@
 import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa"; // Import the Plus icon
 import Dropdown from "./Dropdown";
 import MultiselectDropdown from "./MultiselectDropdown";
 
-const Table = () => {
-  const [rows, setRows] = useState([{ id: 1, label1: "", label2: [] }]);
-  const [label1Options, setLabel1Options] = useState([
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-    "Option 5",
+const TaskManager = () => {
+  const [rows, setRows] = useState([{ id: 1, priority: "", teamMembers: [] }]);
+  const [priorityOptions, setPriorityOptions] = useState([
+    "High",
+    "Medium",
+    "Low",
+    "Critical",
   ]);
-  
-  const [label2Options, setLabel2Options] = useState([
-    "Option A",
-    "Option B",
-    "Option C",
-    "Option D",
+  const [teamMemberOptions, setTeamMemberOptions] = useState([
+    "Rahul",
+    "Prince",
+    "Abhishek",
+    "Murtaza",
+    "Vijendra",
   ]);
 
   const handleAddRow = () => {
-    setRows([...rows, { id: rows.length + 1, label1: "", label2: [] }]);
+    setRows([...rows, { id: rows.length + 1, priority: "", teamMembers: [] }]);
   };
 
   const updateRow = (id, field, value) => {
@@ -30,32 +30,39 @@ const Table = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <table className="w-full border-collapse border border-gray-300 mb-4 hidden sm:table">
+    <div className="container mx-auto p-6 rounded-lg">
+      <table className="w-full border-collapse border border-gray-300 mb-6 hidden sm:table">
         <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-black px-4 py-2">Label 1</th>
-            <th className="border border-black px-4 py-2">Label 2</th>
+          <tr className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
+            <th className="border border-gray-300 px-6 py-3 text-left text-lg font-medium">
+              Task Priority
+            </th>
+            <th className="border border-gray-300 px-6 py-3 text-left text-lg font-medium">
+              Assigned Team Members
+            </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.id}>
-              <td className="border border-green-500 px-4 py-2">
+            <tr
+              key={row.id}
+              className="odd:bg-white even:bg-gray-100 hover:bg-blue-100 transition duration-150"
+            >
+              <td className="border border-gray-300 px-6 py-3">
                 <Dropdown
-                  options={label1Options}
-                  selected={row.label1}
-                  onChange={(value) => updateRow(row.id, "label1", value)}
-                  disabledOptions={rows.map((r) => r.label1)}
+                  options={priorityOptions}
+                  selected={row.priority}
+                  onChange={(value) => updateRow(row.id, "priority", value)}
+                  disabledOptions={rows.map((r) => r.priority)}
                 />
               </td>
-              <td className="border border-green-500 px-4 py-2">
+              <td className="border border-gray-300 px-6 py-3">
                 <MultiselectDropdown
-                  options={label2Options}
-                  selected={row.label2}
-                  onChange={(value) => updateRow(row.id, "label2", value)}
+                  options={teamMemberOptions}
+                  selected={row.teamMembers}
+                  onChange={(value) => updateRow(row.id, "teamMembers", value)}
                   onAddOption={(option) =>
-                    setLabel2Options([...label2Options, option])
+                    setTeamMemberOptions([...teamMemberOptions, option])
                   }
                 />
               </td>
@@ -67,25 +74,27 @@ const Table = () => {
         {rows.map((row) => (
           <div
             key={row.id}
-            className="border border-gray-300 p-4 mb-4 rounded-md"
+            className="border border-gray-300 p-6 mb-4 rounded-lg shadow-md bg-white"
           >
             <div className="mb-4">
-              <h3 className="font-bold mb-2">Label 1</h3>
+              <h3 className="font-semibold text-gray-700 mb-2">Task Priority</h3>
               <Dropdown
-                options={label1Options}
-                selected={row.label1}
-                onChange={(value) => updateRow(row.id, "label1", value)}
-                disabledOptions={rows.map((r) => r.label1)}
+                options={priorityOptions}
+                selected={row.priority}
+                onChange={(value) => updateRow(row.id, "priority", value)}
+                disabledOptions={rows.map((r) => r.priority)}
               />
             </div>
             <div>
-              <h3 className="font-bold mb-2">Label 2</h3>
+              <h3 className="font-semibold text-gray-700 mb-2">
+                Assigned Team Members
+              </h3>
               <MultiselectDropdown
-                options={label2Options}
-                selected={row.label2}
-                onChange={(value) => updateRow(row.id, "label2", value)}
+                options={teamMemberOptions}
+                selected={row.teamMembers}
+                onChange={(value) => updateRow(row.id, "teamMembers", value)}
                 onAddOption={(option) =>
-                  setLabel2Options([...label2Options, option])
+                  setTeamMemberOptions([...teamMemberOptions, option])
                 }
               />
             </div>
@@ -95,8 +104,9 @@ const Table = () => {
       <div className="mt-8 flex justify-center">
         <button
           onClick={handleAddRow}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="flex items-center bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-lg shadow-md hover:shadow-lg hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-150"
         >
+          <FaPlus className="mr-2" /> 
           Add New Row
         </button>
       </div>
@@ -104,4 +114,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default TaskManager;
