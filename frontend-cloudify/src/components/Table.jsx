@@ -11,6 +11,7 @@ const Table = () => {
     "Option 4",
     "Option 5",
   ]);
+  
   const [label2Options, setLabel2Options] = useState([
     "Option A",
     "Option B",
@@ -62,7 +63,6 @@ const Table = () => {
           ))}
         </tbody>
       </table>
-      {/* Responsive layout for small screens */}
       <div className="sm:hidden">
         {rows.map((row) => (
           <div

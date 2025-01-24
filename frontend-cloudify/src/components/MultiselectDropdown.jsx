@@ -5,6 +5,7 @@ const MultiselectDropdown = ({ options, selected, onChange }) => {
   const [dynamicOptions, setDynamicOptions] = useState(options || []);
   const [newOption, setNewOption] = useState("");
 
+  // Custom Option Component for rendering checkboxes
   const CustomOption = (props) => {
     const { data, innerRef, innerProps, isSelected } = props;
     return (
@@ -13,23 +14,25 @@ const MultiselectDropdown = ({ options, selected, onChange }) => {
         {...innerProps}
         className="flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-blue-50"
       >
-        <input
-          type="checkbox"
-          checked={isSelected}
-          readOnly
-        />
+        <input type="checkbox" checked={isSelected} readOnly />
         <span>{data.label}</span>
       </div>
     );
   };
 
+  // Custom Menu Component to include the "Add Option" field
   const CustomMenu = (props) => {
-    const { children } = props;
+    const { children, selectProps } = props;
+
     return (
       <div>
         <components.Menu {...props}>
           {children}
-          <div className="p-2 border-t border-gray-300 bg-white">
+          {/* Add option field */}
+          <div
+            className="p-2 border-t border-gray-300 bg-white"
+            onClick={(e) => e.stopPropagation()} // Prevent dropdown from closing
+          >
             <input
               type="text"
               value={newOption}
