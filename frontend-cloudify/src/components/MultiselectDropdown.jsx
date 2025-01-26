@@ -1,129 +1,109 @@
-import React, { useState } from "react";
-import Select, { components } from "react-select";
+import React, { useState, useEffect, useRef } from "react";
+import { FaPlus, FaChevronDown } from "react-icons/fa";
 
-const MultiselectDropdown = ({ options, selected, onChange }) => {
+const MultiselectDropdown = ({ options, onChange }) => {
   const [dynamicOptions, setDynamicOptions] = useState(options || []);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [newOption, setNewOption] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  // Custom Option Component for rendering checkboxes
-  const CustomOption = (props) => {
-    const { data, innerRef, innerProps, isSelected } = props;
-    return (
-      <div
-        ref={innerRef}
-        {...innerProps}
-        className="flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-blue-50"
-      >
-        <input type="checkbox" checked={isSelected} readOnly />
-        <span>{data.label}</span>
-      </div>
-    );
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+
+  const handleAddOption = () => {
+    if (newOption.trim() && !dynamicOptions.includes(newOption)) {
+      setDynamicOptions((prevOptions) => [...prevOptions, newOption]);
+      setNewOption("");
+      alert("New option added successfully")
+    }
   };
 
-  // Custom Menu Component to include the "Add Option" field
-  const CustomMenu = (props) => {
-    const { children, selectProps } = props;
+  const handleSelectOption = (option) => {
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions((prev) =>
+        prev.filter((selected) => selected !== option)
+      );
+    } else {
+      setSelectedOptions((prev) => [...prev, option]);
+    }
+    onChange(selectedOptions);
+  };
 
-    return (
-      <div>
-        <components.Menu {...props}>
-          {children}
-          {/* Add option field */}
-          <div
-            className="p-2 border-t border-gray-300 bg-white"
-            onClick={(e) => e.stopPropagation()} // Prevent dropdown from closing
-          >
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className="relative inline-block w-full sm:w-auto" ref={dropdownRef}>
+      <div
+        className="w-full sm:w-[350px] max-w-[350px] px-4 py-2 border rounded-lg cursor-pointer bg-white shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none hover:shadow-md transition-all flex items-center justify-between"
+        onClick={toggleDropdown}
+      >
+        {selectedOptions.length > 0 ? (
+          <span className="text-gray-700 truncate">{selectedOptions.join(", ")}</span>
+        ) : (
+          <span className="text-gray-400 truncate">Select or add options</span>
+        )}
+        <FaChevronDown
+          className={`transform transition-all text-gray-300 `}
+        />
+      </div>
+
+      {isDropdownOpen && (
+        <div className="w-full sm:w-[350px] max-w-[350px] absolute left-0 right-0 z-10 mt-2 bg-white border rounded-lg shadow-xl">
+          <div className="max-h-80 overflow-y-auto">
+            {dynamicOptions.map((option, index) => (
+              <div
+                key={index}
+                className={`flex items-center px-4 py-2 cursor-pointer ${
+                  selectedOptions.includes(option)
+                    ? "bg-blue-100 text-blue-700"
+                    : "hover:bg-gray-100 text-gray-700"
+                }`}
+                onClick={() => handleSelectOption(option)}
+              >
+                <input
+                  type="checkbox"
+                  className="mr-2 accent-blue-500"
+                  checked={selectedOptions.includes(option)}
+                  readOnly
+                />
+                {option}
+              </div>
+            ))}
+          </div>
+
+          <div className="p-2 border-t bg-gray-50 flex flex-wrap gap-2 items-center">
             <input
               type="text"
               value={newOption}
               onChange={(e) => setNewOption(e.target.value)}
               placeholder="Add new option"
-              className="w-full border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring focus:ring-blue-300"
+              className="flex-grow min-w-[60%] sm:min-w-[70%] px-3 py-2 text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onFocus={() => setIsDropdownOpen(true)}
             />
             <button
               onClick={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 handleAddOption();
               }}
-              className="mt-2 w-full bg-green-500 text-white py-1 rounded hover:bg-green-600"
+              className="w-full sm:w-auto px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all flex items-center justify-center"
             >
-              Add Option
+              <FaPlus className="mr-2" />
+              Add
             </button>
           </div>
-        </components.Menu>
-      </div>
-    );
-  };
-
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      border: "1px solid #3b82f6",
-      borderRadius: "8px",
-      padding: "4px",
-      boxShadow: "none",
-      "&:hover": {
-        borderColor: "#2563eb",
-      },
-    }),
-    multiValue: (provided) => ({
-      ...provided,
-      backgroundColor: "#dbeafe",
-      borderRadius: "4px",
-      padding: "2px",
-    }),
-    multiValueLabel: (provided) => ({
-      ...provided,
-      color: "#1e3a8a",
-    }),
-    multiValueRemove: (provided) => ({
-      ...provided,
-      color: "#dc2626",
-      ":hover": {
-        backgroundColor: "#fee2e2",
-        color: "#b91c1c",
-      },
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: "#2563eb",
-      "&:hover": {
-        color: "#1d4ed8",
-      },
-    }),
-  };
-
-  const formatOptions = dynamicOptions.map((option) => ({
-    label: option,
-    value: option,
-  }));
-
-  const handleAddOption = () => {
-    if (newOption.trim() && !dynamicOptions.includes(newOption)) {
-      setDynamicOptions((prevOptions) => [...prevOptions, newOption]);
-      setNewOption(""); 
-    }
-  };
-
-  const handleChange = (selectedOptions) => {
-    const values = selectedOptions
-      ? selectedOptions.map((option) => option.value)
-      : [];
-    onChange(values);
-  };
-
-  return (
-    <div className="space-y-4">
-      <Select
-        isMulti
-        options={formatOptions}
-        value={selected.map((val) => ({ label: val, value: val }))}
-        onChange={handleChange}
-        styles={customStyles}
-        components={{ Option: CustomOption, Menu: CustomMenu }}
-        placeholder="Select or add options"
-      />
+        </div>
+      )}
     </div>
   );
 };

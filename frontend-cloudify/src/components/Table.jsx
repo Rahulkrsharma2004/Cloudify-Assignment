@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa"; // Import the Plus icon
+import { FaPlus } from "react-icons/fa";
 import Dropdown from "./Dropdown";
 import MultiselectDropdown from "./MultiselectDropdown";
 
-const TaskManager = () => {
+const Table = () => {
   const [rows, setRows] = useState([{ id: 1, priority: "", teamMembers: [] }]);
   const [priorityOptions, setPriorityOptions] = useState([
     "High",
@@ -13,7 +13,6 @@ const TaskManager = () => {
   ]);
   const [teamMemberOptions, setTeamMemberOptions] = useState([
     "Rahul",
-    "Prince",
     "Abhishek",
     "Murtaza",
     "Vijendra",
@@ -61,9 +60,7 @@ const TaskManager = () => {
                   options={teamMemberOptions}
                   selected={row.teamMembers}
                   onChange={(value) => updateRow(row.id, "teamMembers", value)}
-                  onAddOption={(option) =>
-                    setTeamMemberOptions([...teamMemberOptions, option])
-                  }
+                  onAddOption={(option) => setTeamMemberOptions((prev) => [...prev, option])}
                 />
               </td>
             </tr>
@@ -114,4 +111,4 @@ const TaskManager = () => {
   );
 };
 
-export default TaskManager;
+export default Table;
