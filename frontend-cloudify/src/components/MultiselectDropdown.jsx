@@ -2,31 +2,57 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaPlus, FaChevronDown } from "react-icons/fa";
 
 const MultiselectDropdown = ({ options, onChange }) => {
-  const [dynamicOptions, setDynamicOptions] = useState(options || []);
+  const [dynamicOptions, setDynamicOptions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [newOption, setNewOption] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    const storedOptions = localStorage.getItem("dynamicOptions");
+    const storedSelectedOptions = localStorage.getItem("selectedOptions");
+
+    if (storedOptions) {
+      setDynamicOptions(JSON.parse(storedOptions));
+    } else {
+      setDynamicOptions(options || []);
+    }
+
+    if (storedSelectedOptions) {
+      setSelectedOptions(JSON.parse(storedSelectedOptions));
+    }
+  }, [options]);
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const handleAddOption = () => {
     if (newOption.trim() && !dynamicOptions.includes(newOption)) {
-      setDynamicOptions((prevOptions) => [...prevOptions, newOption]);
+      const updatedOptions = [...dynamicOptions, newOption];
+      setDynamicOptions(updatedOptions);
+      localStorage.setItem("dynamicOptions", JSON.stringify(updatedOptions));
+
       setNewOption("");
-      alert("New option added successfully")
+      alert("New option added successfully");
     }
   };
 
   const handleSelectOption = (option) => {
+    let updatedSelectedOptions;
+
     if (selectedOptions.includes(option)) {
-      setSelectedOptions((prev) =>
-        prev.filter((selected) => selected !== option)
+      updatedSelectedOptions = selectedOptions.filter(
+        (selected) => selected !== option
       );
     } else {
-      setSelectedOptions((prev) => [...prev, option]);
+      updatedSelectedOptions = [...selectedOptions, option];
     }
-    onChange(selectedOptions);
+
+    setSelectedOptions(updatedSelectedOptions);
+    localStorage.setItem(
+      "selectedOptions",
+      JSON.stringify(updatedSelectedOptions)
+    );
+    onChange(updatedSelectedOptions);
   };
 
   useEffect(() => {
@@ -49,13 +75,13 @@ const MultiselectDropdown = ({ options, onChange }) => {
         onClick={toggleDropdown}
       >
         {selectedOptions.length > 0 ? (
-          <span className="text-gray-700 truncate">{selectedOptions.join(", ")}</span>
+          <span className="text-gray-700 truncate">
+            {selectedOptions.join(", ")}
+          </span>
         ) : (
           <span className="text-gray-400 truncate">Select or add options</span>
         )}
-        <FaChevronDown
-          className={`transform transition-all text-gray-300 `}
-        />
+        <FaChevronDown className={`transform transition-all text-gray-300 `} />
       </div>
 
       {isDropdownOpen && (
